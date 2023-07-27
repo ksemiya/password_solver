@@ -50,8 +50,13 @@ class PasswordDriverWrapper:
         child_soup = soup.find_all(class_="rule rule rule-error youtube")
         return child_soup[0]
 
-    def sacrifise_letter(self, letter_num) -> None:
+    def sacrifice_letter(self, letter_num) -> None:
         self.driver.find_element(
             webdriver.common.by.By.XPATH,
             f'//*[@id="__layout"]/div/div/div[2]/div[5]/div/div[1]/div/div/div/div[2]/div/button[{letter_num}]',
+        ).send_keys(webdriver.common.keys.Keys.ENTER)
+
+    def confirm_sacrifice(self) -> None:
+        self.driver.find_element(
+            webdriver.common.by.By.CLASS_NAME, "sacrafice-btn"
         ).send_keys(webdriver.common.keys.Keys.ENTER)
