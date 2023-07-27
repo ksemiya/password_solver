@@ -25,9 +25,9 @@ class PasswordDriverWrapper:
         )  # [40:45] # TODO refactor [40:45] lets do that in separate function
 
     def refresh_captcha(self) -> None:
-        refresh_captcha = self.driver.find_element(
+        self.driver.find_element(
             webdriver.common.by.By.CLASS_NAME.CLASS_NAME, "captcha-refresh"
-        )
+        ).click()
 
     def get_embed_geo(self) -> str:
         soup = BeautifulSoup(self.driver.page_source, "html.parser")
