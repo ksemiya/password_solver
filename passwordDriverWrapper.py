@@ -14,3 +14,11 @@ class PasswordDriverWrapper:
         self.driver.execute_script(
             f"document.querySelector('.ProseMirror').innerHTML = '<p>{new_password}</p>';"
         )
+
+    def get_current_captcha_url(self) -> str:
+        # example https://neal.fun/password-game/captchas/xe8xm.png
+        return self.driver.find_element(
+            webdriver.common.by.By.CLASS_NAME, "captcha-img"
+        ).get_attribute(
+            "src"
+        )  # [40:45] # TODO refactor [40:45] lets do that in separate function
