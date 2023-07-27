@@ -36,3 +36,11 @@ class PasswordDriverWrapper:
             if x["src"].startswith("https://www.google.com/maps/embed"):
                 geo_embed = x["src"]
         return geo_embed
+
+    def get_chess_svg(self) -> str:
+        self.driver.find_element(
+            webdriver.common.by.By.CLASS_NAME, "chess-img"
+        ).get_attribute("src")
+
+    def get_chess_move_text(self) -> str:
+        self.driver.find_element(webdriver.common.by.By.CLASS_NAME, "move").text.strip()
