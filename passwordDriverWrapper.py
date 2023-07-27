@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 from selenium import webdriver
 
 URL_PASSWORD_GAME = "https://neal.fun/password-game/"
@@ -27,3 +28,11 @@ class PasswordDriverWrapper:
         refresh_captcha = self.driver.find_element(
             webdriver.common.by.By.CLASS_NAME.CLASS_NAME, "captcha-refresh"
         )
+
+    def get_embed_geo(self) -> str:
+        soup = BeautifulSoup(self.driver.page_source, "html.parser")
+        child_soup = soup.find_all("iframe")
+        for x in child_soup:
+            if x["src"].startswith("https://www.google.com/maps/embed"):
+                geo_embed = x["src"]
+        return geo_embed
