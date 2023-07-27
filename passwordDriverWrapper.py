@@ -65,3 +65,13 @@ class PasswordDriverWrapper:
         return self.driver.find_element(
             webdriver.common.by.By.CLASS_NAME, "rand-color"
         ).get_attribute("style")
+
+    def refresh_color(self) -> None:
+        self.driver.find_element(
+            webdriver.common.by.By.CLASS_NAME.CLASS_NAME, "refresh"
+        ).click()
+
+    def set_final_answer(self, final_password):
+        self.driver.execute_script(
+            f"document.querySelector('.ProseMirror:not(.password-final)').innerHTML = '<p>{final_password}</p>';"
+        )
