@@ -46,7 +46,7 @@ class PasswordDriverWrapper:
         self.driver.find_element(webdriver.common.by.By.CLASS_NAME, "move").text.strip()
 
     def get_YT_rule(self) -> str:
-        soup = BeautifulSoup(driver.page_source, "html.parser")
+        soup = BeautifulSoup(self.driver.page_source, "html.parser")
         child_soup = soup.find_all(class_="rule rule rule-error youtube")
         return child_soup[0]
 
@@ -60,3 +60,8 @@ class PasswordDriverWrapper:
         self.driver.find_element(
             webdriver.common.by.By.CLASS_NAME, "sacrafice-btn"
         ).send_keys(webdriver.common.keys.Keys.ENTER)
+
+    def get_rgb_color(self) -> str:
+        return self.driver.find_element(
+            webdriver.common.by.By.CLASS_NAME, "rand-color"
+        ).get_attribute("style")
