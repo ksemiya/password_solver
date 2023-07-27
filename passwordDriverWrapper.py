@@ -44,3 +44,14 @@ class PasswordDriverWrapper:
 
     def get_chess_move_text(self) -> str:
         self.driver.find_element(webdriver.common.by.By.CLASS_NAME, "move").text.strip()
+
+    def get_YT_rule(self) -> str:
+        soup = BeautifulSoup(driver.page_source, "html.parser")
+        child_soup = soup.find_all(class_="rule rule rule-error youtube")
+        return child_soup[0]
+
+    def sacrifise_letter(self, letter_num) -> None:
+        self.driver.find_element(
+            webdriver.common.by.By.XPATH,
+            f'//*[@id="__layout"]/div/div/div[2]/div[5]/div/div[1]/div/div/div/div[2]/div/button[{letter_num}]',
+        ).send_keys(webdriver.common.keys.Keys.ENTER)
