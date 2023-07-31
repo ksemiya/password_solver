@@ -1,3 +1,7 @@
+import today_rules  # I should change that but idk how
+import passwordDriverWrapper
+
+
 class PasswordLetter:
     def __init__(self, letter: str) -> None:
         self.letter = letter
@@ -37,6 +41,21 @@ def strong_password():
 
 
 def main():
+    free_digit = 25
+    first_password = (
+        "1" * 25
+        + "$0XXXVpepsimayHe iamloved"
+        + today_rules.today_wordle()
+        + today_rules.today_moon_phase()
+    )  # add leap year in the beginning
+
+    password = str_to_password(first_password)
+    password = password + strong_password()
+
+    driver = passwordDriverWrapper.PasswordDriverWrapper()
+
+    # driver.
+
     return
 
 
