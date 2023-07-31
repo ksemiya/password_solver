@@ -2,6 +2,7 @@ import time
 import today_rules  # I should change that but idk how
 import passwordDriverWrapper
 import re
+import pandas as pd
 
 THRESHOLD = 1  # magic int; I think it will be enough degree of freedom
 
@@ -83,7 +84,13 @@ def main():
         password[captcha_digit_sum:] if captcha_digit_sum != 0 else password
     ) + str_to_password(captcha)
     driver.update_password(password_to_str(password))
-
+    # rule 14
+    countiers = pd.read_json("maps.jsonc")
+    geo_embed = driver.get_embed_geo
+    country = (
+        countiers[countiers.embed == geo_embed].title.values[0].lower().replace(" ", "")
+    )
+    password = password + str_to_password(country)
     return
 
 
