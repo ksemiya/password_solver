@@ -75,3 +75,6 @@ class PasswordDriverWrapper:
         self.driver.execute_script(
             f"document.querySelector('.ProseMirror:not(.password-final)').innerHTML = '<p>{final_password}</p>';"
         )
+
+    def quit(self):
+        self.driver.quit()
