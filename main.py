@@ -32,6 +32,10 @@ def str_to_password(string: str) -> list[PasswordLetter]:
     return [PasswordLetter(letter) for letter in string]
 
 
+def strong_password():
+    return [PasswordLetter("🏋️‍♂️") for _ in range(3)]  # bc of unicode bruh
+
+
 def main():
     return
 
