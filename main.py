@@ -1,5 +1,9 @@
+import time
 import today_rules  # I should change that but idk how
 import passwordDriverWrapper
+import re
+
+THRESHOLD = 1  # magic int; I think it will be enough degree of freedom
 
 
 class PasswordLetter:
@@ -40,6 +44,23 @@ def strong_password():
     return [PasswordLetter("🏋️‍♂️") for _ in range(3)]  # bc of unicode bruh
 
 
+def sum_digits_in_str(string: str) -> int:
+    return sum([int(x) for x in re.findall(r"\d", string)])
+
+
+def captcha_solver(driver: passwordDriverWrapper.PasswordDriverWrapper):
+    captcha_img = driver.get_current_captcha_url()
+    captcha = captcha_img[40:45]
+    captcha_digit_sum = sum_digits_in_str(captcha)
+    while captcha_digit_sum > THRESHOLD:
+        time.sleep(1)
+        driver.refresh_captcha()
+        captcha_img = driver.get_current_captcha_url()
+        captcha = captcha_img[40:45]
+        captcha_digit_sum = sum_digits_in_str(captcha)
+    return captcha, captcha_digit_sum
+
+
 def main():
     free_digit = 25
     first_password = (
@@ -53,8 +74,15 @@ def main():
     password = password + strong_password()
 
     driver = passwordDriverWrapper.PasswordDriverWrapper()
-
-    # driver.
+    time.sleep(1)
+    driver.update_password(password_to_str(password))
+    # rule 10
+    captcha, captcha_digit_sum = captcha_solver()
+    free_digit = free_digit - captcha_digit_sum
+    password = (
+        password[captcha_digit_sum:] if captcha_digit_sum != 0 else password
+    ) + str_to_password(captcha)
+    driver.update_password(password_to_str(password))
 
     return
 
