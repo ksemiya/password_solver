@@ -3,7 +3,10 @@ import today_rules  # I should change that but idk how
 import passwordDriverWrapper
 import re
 import requests
+import string
 import pandas as pd
+from csv import writer
+from datetime import datetime
 from xml.etree import ElementTree as ET
 
 THRESHOLD = 1  # magic int; I think it will be enough degree of freedom
@@ -330,6 +333,42 @@ def main():
     password = password + str_to_password(new_elements_in_password)
     password = password + str_to_password(youtube_url)
     driver.update_password(password_to_str(password))
+
+    # rule 25
+
+    absence_eng_letter = sorted(
+        list(
+            set(string.ascii_lowercase) - set(password_to_str_wo_html(password).lower())
+        ),
+        reverse=True,
+    )
+    scr_letter = (
+        ord(absence_eng_letter[0]) - 96,
+        ord(absence_eng_letter[1]) - 96,
+    )  # TODO exceptions
+
+    # logging
+    yt_ok = True
+    try:  # fuck it is so bad written
+        driver.sacrifice_letter
+    except:
+        yt_ok = False
+
+    # List that we want to add as a new row
+    log_list = [
+        datetime.now(),
+        password_to_str_wo_html(password),
+        captcha,
+        country,
+        chess_img,
+        chess_move,
+        chess_solution,
+        duration_list,
+        youtube_url,
+        "".join(absence_eng_letter),
+        scr_letter,
+        yt_ok,
+    ]
 
 
 if __name__ == "__main__":
