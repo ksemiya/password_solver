@@ -19,11 +19,11 @@ def today_wordle():
 def today_moon_phase():
     # return '🌖'
     dict_moon_phases = {
-        "New": "🌑",
+        "New Moon": "🌑",
         "Waxing Crescent": "🌒",
         "First Quarter": "🌓",
         "Waxing Gibbous": "🌔",
-        "Full": "🌕",
+        "Full Moon": "🌕",
         "Waning Gibbous": "🌖",
         "Last Quarter": "🌗",
         "Waning Crescent": "🌘",
