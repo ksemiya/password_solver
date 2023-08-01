@@ -71,12 +71,18 @@ class PasswordDriverWrapper:
             webdriver.common.by.By.CLASS_NAME.CLASS_NAME, "refresh"
         ).click()
 
+    def confirm_password(self) -> None:
+        self.driver.find_element(
+            webdriver.common.by.By.XPATH,
+            '//*[@id="__layout"]/div/div/div[2]/div[5]/div/div[1]/div/div/div/div[2]/button[1]',
+        ).send_keys(webdriver.common.keys.Keys.ENTER)
+
     def set_final_answer(self, final_password):
         self.driver.execute_script(
             f"document.querySelector('.ProseMirror:not(.password-final)').innerHTML = '<p>{final_password}</p>';"
         )
 
-    def maximize_window(self):
+    def maximize_window(self) -> None:
         self.driver.maximize_window()
 
     def quit(self):
