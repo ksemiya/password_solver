@@ -277,6 +277,25 @@ def wingdings_formatting(password: list[PasswordLetter]) -> list[PasswordLetter]
     return password
 
 
+def rgb_to_hex(r, g, b):
+    return "#{:02x}{:02x}{:02x}".format(int(r), int(g), int(b))
+
+
+def color_solver(driver: passwordDriverWrapper.PasswordDriverWrapper):
+    rgb_str = driver.get_rgb_color()
+    rgb = re.findall(r"\d+", rgb_str)
+    hex_ = rgb_to_hex(*rgb)
+    color_digit_sum = sum_digits_in_str(hex_)
+    while color_digit_sum > THRESHOLD:
+        time.sleep(1)
+        driver.refresh_color()
+        rgb_str = driver.get_current_captcha_url()
+        rgb = rgb_str[40:45]
+        hex_ = rgb_to_hex(*rgb)
+        color_digit_sum = sum_digits_in_str(hex_)
+    return hex_, color_digit_sum
+
+
 def main():
     free_digit = 25
     first_password = (
@@ -408,6 +427,11 @@ def main():
     driver.update_password(password_to_str(password))
 
     # rule 28
+    color, color_digit_sum = color_solver(driver)
+    free_digit = free_digit - color_digit_sum
+    password = password[:2] + password[2 + color_digit_sum :] + str_to_password(color)
+    password = italic_formatting(password)
+    driver.update_password(password_to_str(password))
 
 
 if __name__ == "__main__":
