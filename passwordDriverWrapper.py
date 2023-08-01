@@ -76,5 +76,8 @@ class PasswordDriverWrapper:
             f"document.querySelector('.ProseMirror:not(.password-final)').innerHTML = '<p>{final_password}</p>';"
         )
 
+    def maximize_window(self):
+        self.driver.maximize_window()
+
     def quit(self):
         self.driver.quit()
