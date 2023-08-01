@@ -25,6 +25,8 @@ FONT_SIZE_LIST = [28, 32, 36, 42, 49, 64, 81, 0, 1, 4, 9, 12, 16, 25]
 
 PAUL_CONST = 3
 
+FMT_TIME = "%I:%M"
+
 
 class PasswordLetter:
     def __init__(self, letter: str) -> None:
@@ -466,14 +468,14 @@ def main():
     driver.maximize_window()
 
     # rule 32, 33, 35
-    curr_time = datetime.now().strftime("%H:%M")
+    curr_time = datetime.now().strftime(FMT_TIME)
     digit_sum = sum_digits_in_str(curr_time)
 
     while free_digit - 5 < digit_sum:
         print("fucked up")
         driver.update_password(password_to_str(password))
         time.sleep(15)
-        curr_time = datetime.now().strftime("%H:%M")
+        curr_time = datetime.now().strftime(FMT_TIME)
         digit_sum = sum_digits_in_str(curr_time)
 
     last_digits = free_digit - digit_sum - 5  # 113 or 131 sum to 5
