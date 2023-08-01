@@ -171,20 +171,20 @@ def solve_chess_position(chess_img, chess_move):
     return best_move
 
 
-def detect_elements(s):
+def detect_elements(string: str) -> list[str]:
     i = 0
     detected_list = []
     two_symbols_flg = 0
     candidate = ""
-    while i < len(s):
-        if s[i].isupper():
-            if i + 1 == len(s):
-                candidate = s[i]
-            elif s[i + 1].islower():
+    while i < len(string):
+        if string[i].isupper():
+            if i + 1 == len(string):
+                candidate = string[i]
+            elif string[i + 1].islower():
                 two_symbols_flg = 1
-                candidate = s[i : i + 2]
+                candidate = string[i : i + 2]
             else:
-                candidate = s[i]
+                candidate = string[i]
             if candidate in DICT_ATOMICS.keys():
                 detected_list.append(candidate)
                 i += two_symbols_flg
@@ -196,11 +196,45 @@ def detect_elements(s):
     return detected_list
 
 
+def add_H(curr_elements: str) -> str:
+    result_list = []
+    curr_sum = sum([DICT_ATOMICS[elem] for elem in curr_elements])
+    result_sum = [curr_sum]
+    if curr_sum > 200:
+        print("We fucked up")
+        return  # TODO raise exception
+    result_list.append("H" * (200 - curr_sum))
+    result_sum.append(curr_sum - 200)
+    return "".join(result_list)
+
+
+def H_to_elements(elements: str) -> str:
+    elements_sum = len(elements)
+    result_list = []
+    if elements_sum > 100:
+        result_list.append(DICT_NUMBERS[100])
+        elements_sum -= 100
+    if elements_sum > 50:
+        result_list.append(DICT_NUMBERS[50])
+        elements_sum -= 50
+    if elements_sum > 26:
+        result_list.append(DICT_NUMBERS[26])
+        elements_sum -= 26
+    if elements_sum > 15:
+        result_list.append(DICT_NUMBERS[15])
+        elements_sum -= 15
+    if elements_sum > 9:
+        result_list.append(DICT_NUMBERS[9])
+        elements_sum -= 9
+    result_list.append("H" * elements_sum)
+    return "".join(result_list)
+
+
 def main():
     free_digit = 25
     first_password = (
         "1" * 25
-        + "$0XXXVpepsimayHe iamloved"
+        + "$0XXXVpepsimayHeiamloved"
         + today_rules.today_wordle()
         + today_rules.today_moon_phase()
     )  # add leap year in the beginning
@@ -211,6 +245,7 @@ def main():
     driver = passwordDriverWrapper.PasswordDriverWrapper()
     time.sleep(1)
     driver.update_password(password_to_str(password))
+
     # rule 10
     captcha, captcha_digit_sum = captcha_solver()
     free_digit = free_digit - captcha_digit_sum
@@ -218,8 +253,8 @@ def main():
         password[captcha_digit_sum:] if captcha_digit_sum != 0 else password
     ) + str_to_password(captcha)
     driver.update_password(password_to_str(password))
-    # rule 14
 
+    # rule 14
     geo_embed = driver.get_embed_geo
     country = (
         DF_COUNTRIES[DF_COUNTRIES.embed == geo_embed]
@@ -228,6 +263,7 @@ def main():
         .replace(" ", "")
     )
     password = password + str_to_password(country)
+
     # rule 16
     chess_img = driver.get_chess_svg
     chess_move = driver.get_chess_move_text
@@ -239,7 +275,18 @@ def main():
         + (password[chess_digit_sum:] if chess_digit_sum != 0 else password)
         + str_to_password(chess_solution)
     )
+    driver.update_password(password_to_str(password))
 
+    # rule 18
+    H_in_password = add_H(detect_elements(password_to_str_wo_html(password)))
+    password = password + str_to_password(H_in_password)
+    driver.update_password(password_to_str(password))
+
+    # rule 20
+    driver.update_password(password_to_str(password))
+
+    # rule 23
+    password = str_to_password("🐔🐛🐛") + password[1:]
     driver.update_password(password_to_str(password))
 
 
