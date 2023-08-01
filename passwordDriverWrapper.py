@@ -48,7 +48,7 @@ class PasswordDriverWrapper:
     def get_YT_rule(self) -> str:
         soup = BeautifulSoup(self.driver.page_source, "html.parser")
         child_soup = soup.find_all(class_="rule rule rule-error youtube")
-        return child_soup[0]
+        return child_soup[0].text
 
     def sacrifice_letter(self, letter_num) -> None:
         self.driver.find_element(
