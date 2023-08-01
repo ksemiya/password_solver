@@ -265,6 +265,18 @@ def italic_formatting(password: list[PasswordLetter]) -> list[PasswordLetter]:
     return password
 
 
+def wingdings_formatting(password: list[PasswordLetter]) -> list[PasswordLetter]:
+    wingdings_cnt = len(password) // 3 + 1
+    i = 2
+    curr_w_cnt = 0
+    while curr_w_cnt <= wingdings_cnt:
+        if password[i].letter not in "IVX":
+            password[i].font = "Wingdings"
+            curr_w_cnt += 1
+        i += 1
+    return password
+
+
 def main():
     free_digit = 25
     first_password = (
@@ -390,6 +402,12 @@ def main():
     # rule 26
     password = italic_formatting(password)
     driver.update_password(password_to_str(password))
+
+    # rule 27
+    password = wingdings_formatting(password)
+    driver.update_password(password_to_str(password))
+
+    # rule 28
 
 
 if __name__ == "__main__":
