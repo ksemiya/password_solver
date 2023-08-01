@@ -10,14 +10,15 @@ from datetime import datetime
 from xml.etree import ElementTree as ET
 
 THRESHOLD = 1  # magic int; I think it will be enough degree of freedom
+PATH = "./databases/"
 
-DF_COUNTRIES = pd.read_json("maps.jsonc")
+DF_COUNTRIES = pd.read_json(PATH + "maps.jsonc")
 
-DF_ATOMICS = pd.read_csv("right_atomic_numbers.csv")
+DF_ATOMICS = pd.read_csv(PATH + "right_atomic_numbers.csv")
 DICT_ATOMICS = dict(zip(DF_ATOMICS.symbol, DF_ATOMICS.number))
 DICT_NUMBERS = dict(zip(DF_ATOMICS.number, DF_ATOMICS.symbol))
 
-YT_CHEATSHEET = pd.read_csv("youtube_cheatsheet.csv")
+YT_CHEATSHEET = pd.read_csv(PATH + "youtube_cheatsheet.csv")
 
 FONT_SIZE_LIST = [28, 32, 36, 42, 49, 64, 81, 0, 1, 4, 9, 12, 16, 25]
 

@@ -5,16 +5,15 @@ import requests
 
 def today_wordle():
     url_wordle_ans = " https://word.tips/todays-wordle-answer/"
-
     # today date
     today_date = datetime.datetime.now()
-    today_worlde_raw = today_date.strftime("%B %-d")  # July 4
+    today_worlde_raw = today_date.strftime("%b %-d")  # July 4
     page = requests.get(url_wordle_ans, headers={"User-Agent": "Mozilla/5.0"})
     soup = BeautifulSoup(page.content, "html.parser")
-    child_soup = soup.find_all("strong")
+    child_soup = soup.find_all("h3")
     for x in child_soup:
-        if today_worlde_raw in x.string:
-            return x.string[-5:].lower()
+        if today_worlde_raw in x.text:
+            return x.text[-5:].lower()
 
 
 def today_moon_phase():
