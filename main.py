@@ -14,6 +14,8 @@ DF_ATOMICS = pd.read_csv("right_atomic_numbers.csv")
 DICT_ATOMICS = dict(zip(DF_ATOMICS.symbol, DF_ATOMICS.number))
 DICT_NUMBERS = dict(zip(DF_ATOMICS.number, DF_ATOMICS.symbol))
 
+YT_CHEATSHEET = pd.read_csv("youtube_cheatsheet.csv")
+
 
 class PasswordLetter:
     def __init__(self, letter: str) -> None:
@@ -230,6 +232,29 @@ def H_to_elements(elements: str) -> str:
     return "".join(result_list)
 
 
+def youtube_solver(yt_rule: str):
+    exact_time = re.findall(
+        "Your password must include the URL of an exactly \d+ minute long YouTube video",
+        yt_rule,
+    )
+    if len(exact_time) > 0:
+        duration_list = re.findall(r"\d+", exact_time[0]) + ["0"]
+    else:
+        duration_list = re.findall(
+            r"\d+",
+            re.findall(
+                "Your password must include the URL of a \d+ minute \d+ second long YouTube video",
+                yt_rule,
+            )[0],
+        )
+    duration = int(duration_list[0]) * 60 + int(duration_list[1])
+
+    return (
+        duration_list,
+        "youtu.be/" + YT_CHEATSHEET[YT_CHEATSHEET.duration == duration].url.values[0],
+    )
+
+
 def main():
     free_digit = 25
     first_password = (
@@ -287,6 +312,23 @@ def main():
 
     # rule 23
     password = str_to_password("🐔🐛🐛") + password[1:]
+    driver.update_password(password_to_str(password))
+
+    # rule 24
+    yt_rule = driver.get_YT_rule()
+    duration_list, youtube_url = youtube_solver(yt_rule)
+    youtube_url_sum = sum([int(x) for x in re.findall(r"\d", youtube_url)])
+    free_digit = free_digit - youtube_url_sum
+    password = password[:2] + password[2 + youtube_url_sum :]
+    youtube_url_elements_sum = sum(
+        [DICT_ATOMICS[elem] for elem in detect_elements(youtube_url)]
+    )
+    password = password[: -len(H_in_password)]
+    if youtube_url_elements_sum != 0:
+        elements_in_password = H_in_password[:-youtube_url_elements_sum]
+    new_elements_in_password = H_to_elements(elements_in_password)
+    password = password + str_to_password(new_elements_in_password)
+    password = password + str_to_password(youtube_url)
     driver.update_password(password_to_str(password))
 
 
