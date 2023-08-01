@@ -19,6 +19,8 @@ DICT_NUMBERS = dict(zip(DF_ATOMICS.number, DF_ATOMICS.symbol))
 
 YT_CHEATSHEET = pd.read_csv("youtube_cheatsheet.csv")
 
+FONT_SIZE_LIST = [28, 32, 36, 42, 49, 64, 81, 0, 1, 4, 9, 12, 16, 25]
+
 
 class PasswordLetter:
     def __init__(self, letter: str) -> None:
@@ -296,6 +298,19 @@ def color_solver(driver: passwordDriverWrapper.PasswordDriverWrapper):
     return hex_, color_digit_sum
 
 
+def font_size_change(password: PasswordLetter) -> PasswordLetter:
+    letters_dict = {}
+    for letter in password:
+        curr_l = letter.letter.lower()
+        if curr_l.isalpha():
+            if curr_l in letters_dict:
+                letters_dict[curr_l] += 1
+                letter.font_size = str(FONT_SIZE_LIST[letters_dict[curr_l]])
+            else:
+                letters_dict[curr_l] = 0
+    return password
+
+
 def main():
     free_digit = 25
     first_password = (
@@ -432,6 +447,12 @@ def main():
     password = password[:2] + password[2 + color_digit_sum :] + str_to_password(color)
     password = italic_formatting(password)
     driver.update_password(password_to_str(password))
+
+    # rule 31
+    password = font_size_change(password)
+    driver.update_password(password_to_str(password))
+
+    driver.maximize_window()
 
 
 if __name__ == "__main__":
