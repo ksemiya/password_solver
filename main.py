@@ -258,6 +258,13 @@ def youtube_solver(yt_rule: str):
     )
 
 
+def italic_formatting(password: list[PasswordLetter]) -> list[PasswordLetter]:
+    bold_cnt = sum([letter.bold for letter in password])
+    for i in range(bold_cnt * 2):
+        password[i + 2].italic = True
+    return password
+
+
 def main():
     free_digit = 25
     first_password = (
@@ -335,7 +342,6 @@ def main():
     driver.update_password(password_to_str(password))
 
     # rule 25
-
     absence_eng_letter = sorted(
         list(
             set(string.ascii_lowercase) - set(password_to_str_wo_html(password).lower())
@@ -350,10 +356,9 @@ def main():
     # logging
     yt_ok = True
     try:  # fuck it is so bad written
-        driver.sacrifice_letter
+        driver.sacrifice_letter(scr_letter[0])
     except:
         yt_ok = False
-
     # List that we want to add as a new row
     log_list = [
         datetime.now(),
@@ -369,6 +374,18 @@ def main():
         scr_letter,
         yt_ok,
     ]
+    # Open our existing CSV file in append mode
+    with open("logs.csv", "a") as f:
+        writer_object = writer(f)
+        writer_object.writerow(log_list)
+        f.close()
+    time.sleep(3)
+
+    # there is some urls which contains w, need to be changed
+    driver.sacrifice_letter(scr_letter[0])
+    driver.sacrifice_letter(scr_letter[1])
+    time.sleep(3)  # overwise smth goes wrong
+    driver.confirm_sacrifice()
 
 
 if __name__ == "__main__":
