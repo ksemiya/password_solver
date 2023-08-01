@@ -8,6 +8,12 @@ from xml.etree import ElementTree as ET
 
 THRESHOLD = 1  # magic int; I think it will be enough degree of freedom
 
+DF_COUNTRIES = pd.read_json("maps.jsonc")
+
+DF_ATOMICS = pd.read_csv("right_atomic_numbers.csv")
+DICT_ATOMICS = dict(zip(DF_ATOMICS.symbol, DF_ATOMICS.number))
+DICT_NUMBERS = dict(zip(DF_ATOMICS.number, DF_ATOMICS.symbol))
+
 
 class PasswordLetter:
     def __init__(self, letter: str) -> None:
@@ -165,6 +171,31 @@ def solve_chess_position(chess_img, chess_move):
     return best_move
 
 
+def detect_elements(s):
+    i = 0
+    detected_list = []
+    two_symbols_flg = 0
+    candidate = ""
+    while i < len(s):
+        if s[i].isupper():
+            if i + 1 == len(s):
+                candidate = s[i]
+            elif s[i + 1].islower():
+                two_symbols_flg = 1
+                candidate = s[i : i + 2]
+            else:
+                candidate = s[i]
+            if candidate in DICT_ATOMICS.keys():
+                detected_list.append(candidate)
+                i += two_symbols_flg
+            elif two_symbols_flg == 1:
+                if candidate[:1] in DICT_ATOMICS.keys():
+                    detected_list.append(candidate[:1])
+        two_symbols_flg = 0
+        i += 1
+    return detected_list
+
+
 def main():
     free_digit = 25
     first_password = (
@@ -188,10 +219,13 @@ def main():
     ) + str_to_password(captcha)
     driver.update_password(password_to_str(password))
     # rule 14
-    countiers = pd.read_json("maps.jsonc")
+
     geo_embed = driver.get_embed_geo
     country = (
-        countiers[countiers.embed == geo_embed].title.values[0].lower().replace(" ", "")
+        DF_COUNTRIES[DF_COUNTRIES.embed == geo_embed]
+        .title.values[0]
+        .lower()
+        .replace(" ", "")
     )
     password = password + str_to_password(country)
     # rule 16
