@@ -387,6 +387,10 @@ def main():
     time.sleep(3)  # overwise smth goes wrong
     driver.confirm_sacrifice()
 
+    # rule 26
+    password = italic_formatting(password)
+    driver.update_password(password_to_str(password))
+
 
 if __name__ == "__main__":
     main()
