@@ -26,7 +26,7 @@ class PasswordDriverWrapper:
 
     def refresh_captcha(self) -> None:
         self.driver.find_element(
-            webdriver.common.by.By.CLASS_NAME.CLASS_NAME, "captcha-refresh"
+            webdriver.common.by.By.CLASS_NAME, "captcha-refresh"
         ).click()
 
     def get_embed_geo(self) -> str:
@@ -38,12 +38,14 @@ class PasswordDriverWrapper:
         return geo_embed
 
     def get_chess_svg(self) -> str:
-        self.driver.find_element(
+        return self.driver.find_element(
             webdriver.common.by.By.CLASS_NAME, "chess-img"
         ).get_attribute("src")
 
     def get_chess_move_text(self) -> str:
-        self.driver.find_element(webdriver.common.by.By.CLASS_NAME, "move").text.strip()
+        return self.driver.find_element(
+            webdriver.common.by.By.CLASS_NAME, "move"
+        ).text.strip()
 
     def get_YT_rule(self) -> str:
         soup = BeautifulSoup(self.driver.page_source, "html.parser")
@@ -67,9 +69,7 @@ class PasswordDriverWrapper:
         ).get_attribute("style")
 
     def refresh_color(self) -> None:
-        self.driver.find_element(
-            webdriver.common.by.By.CLASS_NAME.CLASS_NAME, "refresh"
-        ).click()
+        self.driver.find_element(webdriver.common.by.By.CLASS_NAME, "refresh").click()
 
     def confirm_password(self) -> None:
         self.driver.find_element(

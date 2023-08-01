@@ -1,3 +1,4 @@
+import chess.engine
 import time
 import today_rules  # I should change that but idk how
 import passwordDriverWrapper
@@ -21,6 +22,8 @@ DICT_NUMBERS = dict(zip(DF_ATOMICS.number, DF_ATOMICS.symbol))
 YT_CHEATSHEET = pd.read_csv(PATH + "youtube_cheatsheet.csv")
 
 FONT_SIZE_LIST = [28, 32, 36, 42, 49, 64, 81, 0, 1, 4, 9, 12, 16, 25]
+
+PAUL_CONST = 3
 
 
 class PasswordLetter:
@@ -148,8 +151,6 @@ def from_svg_to_FEN(chess_position, chess_move):
 
 
 def get_best_move(fen):
-    import chess.engine
-
     # Define the path to your Stockfish engine file
     engine_path = "/opt/homebrew/Cellar/stockfish/16/bin/stockfish"
 
@@ -292,8 +293,8 @@ def color_solver(driver: passwordDriverWrapper.PasswordDriverWrapper):
     while color_digit_sum > THRESHOLD:
         time.sleep(1)
         driver.refresh_color()
-        rgb_str = driver.get_current_captcha_url()
-        rgb = rgb_str[40:45]
+        rgb_str = driver.get_rgb_color()
+        rgb = re.findall(r"\d+", rgb_str)
         hex_ = rgb_to_hex(*rgb)
         color_digit_sum = sum_digits_in_str(hex_)
     return hex_, color_digit_sum
@@ -329,7 +330,7 @@ def main():
     driver.update_password(password_to_str(password))
 
     # rule 10
-    captcha, captcha_digit_sum = captcha_solver()
+    captcha, captcha_digit_sum = captcha_solver(driver)
     free_digit = free_digit - captcha_digit_sum
     password = (
         password[captcha_digit_sum:] if captcha_digit_sum != 0 else password
@@ -337,7 +338,7 @@ def main():
     driver.update_password(password_to_str(password))
 
     # rule 14
-    geo_embed = driver.get_embed_geo
+    geo_embed = driver.get_embed_geo()
     country = (
         DF_COUNTRIES[DF_COUNTRIES.embed == geo_embed]
         .title.values[0]
@@ -345,10 +346,12 @@ def main():
         .replace(" ", "")
     )
     password = password + str_to_password(country)
+    driver.update_password(password_to_str(password))
+    time.sleep(1)
 
     # rule 16
-    chess_img = driver.get_chess_svg
-    chess_move = driver.get_chess_move_text
+    chess_img = driver.get_chess_svg()
+    chess_move = driver.get_chess_move_text()
     chess_solution = solve_chess_position(chess_img, chess_move)
     chess_digit_sum = sum([int(x) for x in re.findall(r"\d", chess_solution)])
     free_digit = free_digit - chess_digit_sum
@@ -374,15 +377,17 @@ def main():
     # rule 24
     yt_rule = driver.get_YT_rule()
     duration_list, youtube_url = youtube_solver(yt_rule)
-    youtube_url_sum = sum([int(x) for x in re.findall(r"\d", youtube_url)])
+    youtube_url_sum = sum_digits_in_str(youtube_url)
     free_digit = free_digit - youtube_url_sum
-    password = password[:2] + password[2 + youtube_url_sum :]
+    password = password[:PAUL_CONST] + password[PAUL_CONST + youtube_url_sum :]
     youtube_url_elements_sum = sum(
         [DICT_ATOMICS[elem] for elem in detect_elements(youtube_url)]
     )
     password = password[: -len(H_in_password)]
     if youtube_url_elements_sum != 0:
         elements_in_password = H_in_password[:-youtube_url_elements_sum]
+    else:
+        elements_in_password = H_in_password
     new_elements_in_password = H_to_elements(elements_in_password)
     password = password + str_to_password(new_elements_in_password)
     password = password + str_to_password(youtube_url)
@@ -441,11 +446,16 @@ def main():
     # rule 27
     password = wingdings_formatting(password)
     driver.update_password(password_to_str(password))
+    time.sleep(1)
 
     # rule 28
     color, color_digit_sum = color_solver(driver)
     free_digit = free_digit - color_digit_sum
-    password = password[:2] + password[2 + color_digit_sum :] + str_to_password(color)
+    password = (
+        password[:PAUL_CONST]
+        + password[PAUL_CONST + color_digit_sum :]
+        + str_to_password(color)
+    )
     password = italic_formatting(password)
     driver.update_password(password_to_str(password))
 
@@ -475,8 +485,8 @@ def main():
         len_goal = 113
 
     password = (
-        password[:2]
-        + password[free_digit:]
+        password[:PAUL_CONST]
+        + password[PAUL_CONST + free_digit :]
         + str_to_password("9" * (last_digits // 9))
         + str_to_password(str(last_digits % 9))
         + str_to_password(str(len_goal) + " " + curr_time)
@@ -486,6 +496,8 @@ def main():
     driver.update_password(password_to_str(password))
     password = italic_formatting(password)
     driver.update_password(password_to_str(password))
+    time.sleep(1)
+    driver.confirm_password()
     driver.set_final_answer(password_to_str(password))
 
     time.sleep(30)
