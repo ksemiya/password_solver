@@ -454,6 +454,42 @@ def main():
 
     driver.maximize_window()
 
+    # rule 32, 33, 35
+    curr_time = datetime.now().strftime("%H:%M")
+    digit_sum = sum_digits_in_str(curr_time)
+
+    while free_digit - 5 < digit_sum:
+        print("fucked up")
+        driver.update_password(password_to_str(password))
+        time.sleep(15)
+        curr_time = datetime.now().strftime("%H:%M")
+        digit_sum = sum_digits_in_str(curr_time)
+
+    last_digits = free_digit - digit_sum - 5  # 113 or 131 sum to 5
+
+    password_len = len(password) - (last_digits // 10) + 1
+    if password_len > 113:
+        len_goal = 131
+    else:
+        len_goal = 113
+
+    password = (
+        password[:2]
+        + password[free_digit:]
+        + str_to_password("9" * (last_digits // 9))
+        + str_to_password(str(last_digits % 9))
+        + str_to_password(str(len_goal) + " " + curr_time)
+    )
+    password = password + str_to_password(" " * (len_goal - len(password)))
+    password = wingdings_formatting(password)
+    driver.update_password(password_to_str(password))
+    password = italic_formatting(password)
+    driver.update_password(password_to_str(password))
+    driver.set_final_answer(password_to_str(password))
+
+    time.sleep(30)
+    driver.quit()
+
 
 if __name__ == "__main__":
     main()

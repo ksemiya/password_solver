@@ -77,7 +77,7 @@ class PasswordDriverWrapper:
             '//*[@id="__layout"]/div/div/div[2]/div[5]/div/div[1]/div/div/div/div[2]/button[1]',
         ).send_keys(webdriver.common.keys.Keys.ENTER)
 
-    def set_final_answer(self, final_password):
+    def set_final_answer(self, final_password: str) -> None:
         self.driver.execute_script(
             f"document.querySelector('.ProseMirror:not(.password-final)').innerHTML = '<p>{final_password}</p>';"
         )
