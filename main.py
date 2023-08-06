@@ -1,14 +1,17 @@
-import chess.engine
-import time
-import today_rules  # I should change that but idk how
-import passwordDriverWrapper
 import re
-import requests
 import string
-import pandas as pd
+import time
 from csv import writer
 from datetime import datetime
 from xml.etree import ElementTree as ET
+
+import chess.engine
+import pandas as pd
+import requests
+
+import password_driver_wrapper
+import password_letter
+import today_rules  # I should change that but idk how
 
 THRESHOLD = 1  # magic int; I think it will be enough degree of freedom
 PATH = "./databases/"
@@ -28,49 +31,29 @@ PAUL_CONST = 3
 FMT_TIME = "%I:%M"
 
 
-class PasswordLetter:
-    def __init__(self, letter: str) -> None:
-        self.letter = letter
-        # rule vowels are bold
-        self.bold = True if letter in "aeiouyAEIOUY" else False
-        self.italic = False
-        self.font_size = int(letter) * int(letter) if letter.isdigit() else None
-        self.font = "Times New Roman" if letter in "IVX" else None
-
-    def to_html(self):
-        result = self.letter
-        if self.bold:
-            result = f"<strong>{result}</strong>"
-        if self.italic:
-            result = f"<i>{result}</i>"
-        if self.font_size is not None or self.font is not None:
-            self.font_size = "28" if self.font_size is None else self.font_size
-            self.font = "Monospace" if self.font is None else self.font
-            result = f'<span style="font-family: {self.font}; font-size: {self.font_size}px">{result}</span>'
-        return result
-
-
-def password_to_str(password: list[PasswordLetter]) -> str:
+def password_to_str(password: list[password_letter.PasswordLetter]) -> str:
     return "".join([letter.to_html() for letter in password])
 
 
-def password_to_str_wo_html(password: list[PasswordLetter]) -> str:
+def password_to_str_wo_html(password: list[password_letter.PasswordLetter]) -> str:
     return "".join([letter.letter for letter in password])
 
 
-def str_to_password(string: str) -> list[PasswordLetter]:
-    return [PasswordLetter(letter) for letter in string]
+def str_to_password(string: str) -> list[password_letter.PasswordLetter]:
+    return [password_letter.PasswordLetter(letter) for letter in string]
 
 
 def strong_password():
-    return [PasswordLetter("🏋️‍♂️") for _ in range(3)]  # bc of unicode bruh
+    return [
+        password_letter.PasswordLetter("🏋️‍♂️") for _ in range(3)
+    ]  # bc of unicode bruh
 
 
 def sum_digits_in_str(string: str) -> int:
     return sum([int(x) for x in re.findall(r"\d", string)])
 
 
-def captcha_solver(driver: passwordDriverWrapper.PasswordDriverWrapper):
+def captcha_solver(driver: password_driver_wrapper.PasswordDriverWrapper):
     captcha_img = driver.get_current_captcha_url()
     captcha = captcha_img[40:45]
     captcha_digit_sum = sum_digits_in_str(captcha)
@@ -100,7 +83,7 @@ def get_chess_position(chess_img):
                 chess_position = elem.text
                 return chess_position
     else:
-        print("Failed to fetch SVG.")  # TODO raise Err
+        raise RuntimeError("Failed to fetch SVG.")
     return
 
 
@@ -264,14 +247,18 @@ def youtube_solver(yt_rule: str):
     )
 
 
-def italic_formatting(password: list[PasswordLetter]) -> list[PasswordLetter]:
+def italic_formatting(
+    password: list[password_letter.PasswordLetter],
+) -> list[password_letter.PasswordLetter]:
     bold_cnt = sum([letter.bold for letter in password])
     for i in range(bold_cnt * 2):
         password[i + 2].italic = True
     return password
 
 
-def wingdings_formatting(password: list[PasswordLetter]) -> list[PasswordLetter]:
+def wingdings_formatting(
+    password: list[password_letter.PasswordLetter],
+) -> list[password_letter.PasswordLetter]:
     wingdings_cnt = len(password) // 3 + 1
     i = 2
     curr_w_cnt = 0
@@ -287,7 +274,7 @@ def rgb_to_hex(r, g, b):
     return "#{:02x}{:02x}{:02x}".format(int(r), int(g), int(b))
 
 
-def color_solver(driver: passwordDriverWrapper.PasswordDriverWrapper):
+def color_solver(driver: password_driver_wrapper.PasswordDriverWrapper):
     rgb_str = driver.get_rgb_color()
     rgb = re.findall(r"\d+", rgb_str)
     hex_ = rgb_to_hex(*rgb)
@@ -302,7 +289,9 @@ def color_solver(driver: passwordDriverWrapper.PasswordDriverWrapper):
     return hex_, color_digit_sum
 
 
-def font_size_change(password: PasswordLetter) -> PasswordLetter:
+def font_size_change(
+    password: password_letter.PasswordLetter,
+) -> password_letter.PasswordLetter:
     letters_dict = {}
     for letter in password:
         curr_l = letter.letter.lower()
@@ -327,7 +316,7 @@ def main():
     password = str_to_password(first_password)
     password = password + strong_password()
 
-    driver = passwordDriverWrapper.PasswordDriverWrapper()
+    driver = password_driver_wrapper.PasswordDriverWrapper()
     time.sleep(1)
     driver.update_password(password_to_str(password))
 
