@@ -12,12 +12,11 @@ import requests
 import captcha_solver
 import password_driver_wrapper
 import password_letter
+import geo_solver
 import today_rules  # I should change that but idk how
 
 THRESHOLD = 1  # magic int; I think it will be enough degree of freedom
 PATH = "./databases/"
-
-DF_COUNTRIES = pd.read_json(PATH + "maps.jsonc")
 
 DF_ATOMICS = pd.read_csv(PATH + "right_atomic_numbers.csv")
 DICT_ATOMICS = dict(zip(DF_ATOMICS.symbol, DF_ATOMICS.number))
@@ -305,7 +304,6 @@ def main():
     password = password + strong_password()
 
     driver = password_driver_wrapper.PasswordDriverWrapper()
-    time.sleep(1)
     driver.update_password(password_to_str(password))
 
     # rule 10
@@ -314,14 +312,7 @@ def main():
     driver.update_password(password_to_str(password))
 
     # rule 14
-    geo_embed = driver.get_embed_geo()
-    country = (
-        DF_COUNTRIES[DF_COUNTRIES.embed == geo_embed]
-        .title.values[0]
-        .lower()
-        .replace(" ", "")
-    )
-    password = password + str_to_password(country)
+    password = geo_solver.geo_solver(driver, password)
     driver.update_password(password_to_str(password))
     time.sleep(1)
 

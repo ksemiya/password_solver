@@ -15,4 +15,4 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: pylint
-      uses: cclauss/GitHub-Action-for-pylint@0.7.0
+      uses: actions/checkout@v3
