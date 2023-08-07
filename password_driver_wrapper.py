@@ -1,3 +1,5 @@
+import time
+
 from bs4 import BeautifulSoup
 from selenium import webdriver
 
@@ -10,6 +12,7 @@ class PasswordDriverWrapper:
     def __init__(self) -> None:
         self.driver = webdriver.Safari()
         self.driver.get(URL_PASSWORD_GAME)
+        time.sleep(1)
 
     def update_password(self, new_password: str) -> None:
         self.driver.execute_script(
@@ -25,6 +28,7 @@ class PasswordDriverWrapper:
         )  # [40:45] # TODO refactor [40:45] lets do that in separate function
 
     def refresh_captcha(self) -> None:
+        time.sleep(1)
         self.driver.find_element(
             webdriver.common.by.By.CLASS_NAME, "captcha-refresh"
         ).click()
