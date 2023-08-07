@@ -372,34 +372,6 @@ def main():
         ord(absence_eng_letter[1]) - 96,
     )  # TODO exceptions
 
-    # logging
-    yt_ok = True
-    try:  # fuck it is so bad written
-        driver.sacrifice_letter(scr_letter[0])
-    except:
-        yt_ok = False
-    # List that we want to add as a new row
-    log_list = [
-        datetime.now(),
-        password_to_str_wo_html(password),
-        captcha,
-        country,
-        chess_img,
-        chess_move,
-        chess_solution,
-        duration_list,
-        youtube_url,
-        "".join(absence_eng_letter),
-        scr_letter,
-        yt_ok,
-    ]
-    # Open our existing CSV file in append mode
-    with open("logs.csv", "a") as f:
-        writer_object = writer(f)
-        writer_object.writerow(log_list)
-        f.close()
-    time.sleep(3)
-
     # there is some urls which contains w, need to be changed
     driver.sacrifice_letter(scr_letter[0])
     driver.sacrifice_letter(scr_letter[1])
