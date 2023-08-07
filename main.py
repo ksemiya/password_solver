@@ -9,6 +9,7 @@ import chess.engine
 import pandas as pd
 import requests
 
+import captcha_solver
 import password_driver_wrapper
 import password_letter
 import today_rules  # I should change that but idk how
@@ -51,19 +52,6 @@ def strong_password():
 
 def sum_digits_in_str(string: str) -> int:
     return sum([int(x) for x in re.findall(r"\d", string)])
-
-
-def captcha_solver(driver: password_driver_wrapper.PasswordDriverWrapper):
-    captcha_img = driver.get_current_captcha_url()
-    captcha = captcha_img[40:45]
-    captcha_digit_sum = sum_digits_in_str(captcha)
-    while captcha_digit_sum > THRESHOLD:
-        time.sleep(1)
-        driver.refresh_captcha()
-        captcha_img = driver.get_current_captcha_url()
-        captcha = captcha_img[40:45]
-        captcha_digit_sum = sum_digits_in_str(captcha)
-    return captcha, captcha_digit_sum
 
 
 def get_chess_position(chess_img):
@@ -321,11 +309,8 @@ def main():
     driver.update_password(password_to_str(password))
 
     # rule 10
-    captcha, captcha_digit_sum = captcha_solver(driver)
-    free_digit = free_digit - captcha_digit_sum
-    password = (
-        password[captcha_digit_sum:] if captcha_digit_sum != 0 else password
-    ) + str_to_password(captcha)
+    password, captcha_digit_sum = captcha_solver.captcha_new_password(driver, password)
+    free_digit -= captcha_digit_sum
     driver.update_password(password_to_str(password))
 
     # rule 14
