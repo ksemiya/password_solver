@@ -1,5 +1,6 @@
 """function for exceptional symbols in password"""
 import password_letter
+import utils
 
 
 def strong_password():
@@ -13,6 +14,14 @@ def strong_password():
     ]  # bc of unicode bruh
 
 
-def paul_egg():
+def paul_egg(
+    password: password_letter.PasswordLetter,
+) -> password_letter.PasswordLetter:
     """add symbol for rule 17"""
-    return [password_letter.PasswordLetter("🥚")]
+    return utils.str_to_password("🥚") + password
+
+
+def paul_chicken_and_caterpillars(
+    password: password_letter.PasswordLetter,
+) -> password_letter.PasswordLetter:
+    password = utils.str_to_password("🐔🐛🐛") + password[1:]
