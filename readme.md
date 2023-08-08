@@ -20,7 +20,7 @@ Huge thanks to [pog5](https://github.com/pog5/nealpasswordgame/tree/main), use t
 13. Current phase of the moon as an emoji (one of :new_moon::first_quarter_moon::waxing_gibbous_moon::full_moon::crescent_moon::first_quarter_moon_with_face::full_moon_with_face::waxing_crescent_moon::waning_gibbous_moon::last_quarter_moon::waning_crescent_moon::new_moon_with_face::last_quarter_moon_with_face:)
 14. Name of country from Google Maps 
 15. Needs a leap year 
-16. Calculate the best chess move, bypass below.
+16. Calculate the best chess move.
 17. Paul the :egg:! Don't delete him by accident or you lose the game.
 18. All atomic numbers in your password must add up to 200
 19. All vowels must be bolded (bold button unlocked)
