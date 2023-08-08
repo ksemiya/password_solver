@@ -1,6 +1,7 @@
-from frozendict import frozendict
-import pandas as pd
 import re
+
+import pandas as pd
+from frozendict import frozendict
 
 import password_driver_wrapper
 import password_letter
