@@ -14,13 +14,9 @@ import password_letter
 import geo_solver
 import today_rules
 import utils
+import utils_chemical
 
 THRESHOLD = 1  # magic int; I think it will be enough degree of freedom
-PATH = "./databases/"
-
-DF_ATOMICS = pd.read_csv(PATH + "right_atomic_numbers.csv")
-DICT_ATOMICS = dict(zip(DF_ATOMICS.symbol, DF_ATOMICS.number))
-DICT_NUMBERS = dict(zip(DF_ATOMICS.number, DF_ATOMICS.symbol))
 
 YT_CHEATSHEET = pd.read_csv(PATH + "youtube_cheatsheet.csv")
 
@@ -35,69 +31,6 @@ def strong_password():
     return [
         password_letter.PasswordLetter("🏋️‍♂️") for _ in range(3)
     ]  # bc of unicode bruh
-
-
-def sum_digits_in_str(string: str) -> int:
-    return sum([int(x) for x in re.findall(r"\d", string)])
-
-
-def detect_elements(string: str) -> list[str]:
-    i = 0
-    detected_list = []
-    two_symbols_flg = 0
-    candidate = ""
-    while i < len(string):
-        if string[i].isupper():
-            if i + 1 == len(string):
-                candidate = string[i]
-            elif string[i + 1].islower():
-                two_symbols_flg = 1
-                candidate = string[i : i + 2]
-            else:
-                candidate = string[i]
-            if candidate in DICT_ATOMICS.keys():
-                detected_list.append(candidate)
-                i += two_symbols_flg
-            elif two_symbols_flg == 1:
-                if candidate[:1] in DICT_ATOMICS.keys():
-                    detected_list.append(candidate[:1])
-        two_symbols_flg = 0
-        i += 1
-    return detected_list
-
-
-def add_H(curr_elements: str) -> str:
-    result_list = []
-    curr_sum = sum([DICT_ATOMICS[elem] for elem in curr_elements])
-    result_sum = [curr_sum]
-    if curr_sum > 200:
-        print("We fucked up")
-        return  # TODO raise exception
-    result_list.append("H" * (200 - curr_sum))
-    result_sum.append(curr_sum - 200)
-    return "".join(result_list)
-
-
-def H_to_elements(elements: str) -> str:
-    elements_sum = len(elements)
-    result_list = []
-    if elements_sum > 100:
-        result_list.append(DICT_NUMBERS[100])
-        elements_sum -= 100
-    if elements_sum > 50:
-        result_list.append(DICT_NUMBERS[50])
-        elements_sum -= 50
-    if elements_sum > 26:
-        result_list.append(DICT_NUMBERS[26])
-        elements_sum -= 26
-    if elements_sum > 15:
-        result_list.append(DICT_NUMBERS[15])
-        elements_sum -= 15
-    if elements_sum > 9:
-        result_list.append(DICT_NUMBERS[9])
-        elements_sum -= 9
-    result_list.append("H" * elements_sum)
-    return "".join(result_list)
 
 
 def youtube_solver(yt_rule: str):
@@ -209,9 +142,10 @@ def main():
     free_digit -= chess_digit_sum
     driver.update_password(utils.str_to_password(password))
 
+    # rule 17
+
     # rule 18
-    H_in_password = add_H(detect_elements(utils.str_to_password_wo_html(password)))
-    password = password + utils.str_to_password(H_in_password)
+    password = utils_chemical.new_password_with_h(password)
     driver.update_password(utils.str_to_password(password))
 
     # rule 20
