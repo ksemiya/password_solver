@@ -42,6 +42,7 @@ class PasswordDriverWrapper:
         return geo_embed
 
     def get_chess_svg(self) -> str:
+        time.sleep(1)
         return self.driver.find_element(
             webdriver.common.by.By.CLASS_NAME, "chess-img"
         ).get_attribute("src")
