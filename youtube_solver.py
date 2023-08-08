@@ -30,10 +30,7 @@ def youtube_solver(yt_rule: str):
         )
     duration = int(duration_list[0]) * 60 + int(duration_list[1])
 
-    return (
-        duration_list,
-        "youtu.be/" + _DICT_YT[duration],
-    )
+    return "youtu.be/" + _DICT_YT[duration]
 
 
 def solver(

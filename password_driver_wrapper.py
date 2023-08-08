@@ -70,12 +70,12 @@ class PasswordDriverWrapper:
         ).send_keys(webdriver.common.keys.Keys.ENTER)
 
     def get_rgb_color(self) -> str:
-        time.sleep(1)
         return self.driver.find_element(
             webdriver.common.by.By.CLASS_NAME, "rand-color"
         ).get_attribute("style")
 
     def refresh_color(self) -> None:
+        time.sleep(1)
         self.driver.find_element(webdriver.common.by.By.CLASS_NAME, "refresh").click()
 
     def confirm_password(self) -> None:

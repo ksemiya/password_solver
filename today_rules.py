@@ -4,16 +4,15 @@ import requests
 
 
 def today_wordle():
-    url_wordle_ans = " https://word.tips/todays-wordle-answer/"
     # today date
     today_date = datetime.datetime.now()
-    today_worlde_raw = today_date.strftime("%b %-d")  # July 4
-    page = requests.get(url_wordle_ans, headers={"User-Agent": "Mozilla/5.0"})
+    today_date_str = today_date.strftime("%Y-%m-%d")  # 2023-08-08
+    url_wordle_ans = "https://neal.fun/api/password-game/wordle?date=" + today_date_str
+    page = requests.get(
+        url_wordle_ans, headers={"User-Agent": "Mozilla/5.0"}, timeout=10
+    )
     soup = BeautifulSoup(page.content, "html.parser")
-    child_soup = soup.find_all("h3")
-    for x in child_soup:
-        if today_worlde_raw in x.text:
-            return x.text[-5:].lower()
+    return soup.text[11:16]
 
 
 def today_moon_phase():
