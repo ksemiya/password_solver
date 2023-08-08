@@ -36,6 +36,10 @@ def detect_elements(string: str) -> list[str]:
     return detected_list
 
 
+def sum_detect_elements(string: str) -> int:
+    return sum(_DICT_ATOMICS[elem] for elem in detect_elements(string))
+
+
 def add_h(curr_elements: str) -> str:
     result_list = []
     curr_sum = sum([_DICT_ATOMICS[elem] for elem in curr_elements])
@@ -48,30 +52,29 @@ def add_h(curr_elements: str) -> str:
     return "".join(result_list)
 
 
-def h_to_elements(elements: str) -> str:
-    elements_sum = len(elements)
+def h_to_elements(elements_cnt: str) -> str:
     result_list = []
-    if elements_sum > 100:
+    if elements_cnt > 100:
         result_list.append(_DICT_NUMBERS[100])
-        elements_sum -= 100
-    if elements_sum > 50:
+        elements_cnt -= 100
+    if elements_cnt > 50:
         result_list.append(_DICT_NUMBERS[50])
-        elements_sum -= 50
-    if elements_sum > 26:
+        elements_cnt -= 50
+    if elements_cnt > 26:
         result_list.append(_DICT_NUMBERS[26])
-        elements_sum -= 26
-    if elements_sum > 15:
+        elements_cnt -= 26
+    if elements_cnt > 15:
         result_list.append(_DICT_NUMBERS[15])
-        elements_sum -= 15
-    if elements_sum > 9:
+        elements_cnt -= 15
+    if elements_cnt > 9:
         result_list.append(_DICT_NUMBERS[9])
-        elements_sum -= 9
-    result_list.append("H" * elements_sum)
+        elements_cnt -= 9
+    result_list.append("H" * elements_cnt)
     return "".join(result_list)
 
 
 def new_password_with_h(
     password: password_letter.PasswordLetter,
-) -> password_letter.PasswordLetter:
+) -> (password_letter.PasswordLetter, int):
     h_in_password = add_h(detect_elements(utils.password_to_str_wo_html(password)))
-    return password + utils.str_to_password(h_in_password)
+    return password + utils.str_to_password(h_in_password), len(h_in_password)

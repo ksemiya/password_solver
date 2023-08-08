@@ -64,11 +64,13 @@ class PasswordDriverWrapper:
         ).send_keys(webdriver.common.keys.Keys.ENTER)
 
     def confirm_sacrifice(self) -> None:
+        time.sleep(3)
         self.driver.find_element(
             webdriver.common.by.By.CLASS_NAME, "sacrafice-btn"
         ).send_keys(webdriver.common.keys.Keys.ENTER)
 
     def get_rgb_color(self) -> str:
+        time.sleep(1)
         return self.driver.find_element(
             webdriver.common.by.By.CLASS_NAME, "rand-color"
         ).get_attribute("style")
@@ -77,6 +79,7 @@ class PasswordDriverWrapper:
         self.driver.find_element(webdriver.common.by.By.CLASS_NAME, "refresh").click()
 
     def confirm_password(self) -> None:
+        time.sleep(1)
         self.driver.find_element(
             webdriver.common.by.By.XPATH,
             '//*[@id="__layout"]/div/div/div[2]/div[5]/div/div[1]/div/div/div/div[2]/button[1]',
@@ -92,3 +95,6 @@ class PasswordDriverWrapper:
 
     def quit(self):
         self.driver.quit()
+
+    def wait(self, sec):
+        time.sleep(sec)
