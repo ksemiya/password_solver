@@ -26,7 +26,7 @@ Huge thanks to [pog5](https://github.com/pog5/nealpasswordgame/tree/main), use t
 19. All vowels must be bolded (bold button unlocked)
 20. Delete all of the :fire: before it deletes your password (more importantly Paul)
 21. Add 3 of :man_lifting_weights: 
-22. Needs to contain one of `"i am loved", "i am worthy", "i am enough"`
+22. Needs to contain one of `i am loved`, `i am worthy`, `i am enough`
 23. Egg hatches, feed him a :bug: every 20 seconds or paste in 3 :bug: every 50 seconds~.
 24. Find a YouTube video with a given (randomly generated) length.
 25. You need to pick 2 letters you will no longer be able to use
