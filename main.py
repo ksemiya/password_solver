@@ -25,6 +25,8 @@ def main():
     password = password + utils_rules.strong_password()
 
     driver = password_driver_wrapper.PasswordDriverWrapper()
+    driver.maximize_window()  # Do I need that?
+    driver.wait(1)
     driver.update_password(utils.password_to_str(password))
 
     # rule 10
@@ -80,8 +82,6 @@ def main():
     # rule 31
     password = utils_rules.font_size_change(password)
     driver.update_password(utils.password_to_str(password))
-
-    driver.maximize_window()  # Do I need that?
 
     # rule 32, 33, 35
     password = solver_final_rules.solver(driver, password, free_digits_cnt)

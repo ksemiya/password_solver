@@ -17,8 +17,8 @@ def solver(
     digit_sum = utils.sum_digits_in_str(curr_time)
 
     while free_digit - 5 < digit_sum:
-        print("fucked up")
-        driver.update_password(utils.str_to_password(password))
+        print("fucked up", free_digit, digit_sum)
+        driver.update_password(utils.password_to_str(password))
         driver.wait(15)
         curr_time = datetime.now().strftime(_FMT_TIME)
         digit_sum = utils.sum_digits_in_str(curr_time)
