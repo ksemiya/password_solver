@@ -3,6 +3,8 @@ Script on python for beating https://neal.fun/password-game/
 
 Huge thanks to [pog5](https://github.com/pog5/nealpasswordgame/tree/main), use their cheatsheets if you want to beat the game yourself.
 
+- [A simplified list of the Rules](#a-simplified-list-of-the-rules)
+
 ## A simplified list of the Rules:
 
 1. At least 5 characters
@@ -39,7 +41,6 @@ Huge thanks to [pog5](https://github.com/pog5/nealpasswordgame/tree/main), use t
 32. Password needs to contain password's length as a number
 33. Password length also needs to be a prime number
 34. (Automatically Checked off, look at the rule's number if you're asking why)
-35. You need the current time in format HH:MM
+35. You need the current time in format HH:MM (12 hour format)
 36. Re-type the password into another textbox, you have 2 minutes to do this. Good Luck.
 
-[Bypass]: CHEATS.md
