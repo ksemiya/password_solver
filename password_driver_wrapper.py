@@ -7,14 +7,16 @@ from selenium.webdriver.safari import options
 
 URL_PASSWORD_GAME = "https://neal.fun/password-game/"
 
+
 # class of driver and all that driver is doing
-
-
 class PasswordDriverWrapper:
-    def __init__(self) -> None:
+    def __init__(self, remote_server_addr) -> None:
+        # /usr/bin/safaridriver -p 50259
+        if remote_server_addr is None:
+            remote_server_addr = "http://localhost:50259"
         self.driver = webdriver.Remote(
             command_executor=remote_connection.SafariRemoteConnection(
-                remote_server_addr="http://localhost:50259"
+                remote_server_addr=remote_server_addr
             ),
             options=options.Options(),
         )

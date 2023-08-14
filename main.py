@@ -1,3 +1,5 @@
+import argparse
+
 import password_driver_wrapper
 import solver_captcha
 import solver_chess
@@ -13,6 +15,10 @@ import youtube_solver
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--addr", "--address", help="get remote server address")
+    args = vars(parser.parse_args())
+
     free_digits_cnt = 25
     first_password = (
         "1" * free_digits_cnt
@@ -24,7 +30,7 @@ def main():
     password = utils.str_to_password(first_password)
     password = password + utils_rules.strong_password()
 
-    driver = password_driver_wrapper.PasswordDriverWrapper()
+    driver = password_driver_wrapper.PasswordDriverWrapper(args["addr"])
     driver.maximize_window()  # Do I need that?
     driver.wait(1)
     driver.update_password(utils.password_to_str(password))
