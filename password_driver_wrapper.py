@@ -2,6 +2,8 @@ import time
 
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium.webdriver.safari import remote_connection
+from selenium.webdriver.safari import options
 
 URL_PASSWORD_GAME = "https://neal.fun/password-game/"
 
@@ -10,7 +12,13 @@ URL_PASSWORD_GAME = "https://neal.fun/password-game/"
 
 class PasswordDriverWrapper:
     def __init__(self) -> None:
-        self.driver = webdriver.Safari()
+        self.driver = webdriver.Remote(
+            command_executor=remote_connection.SafariRemoteConnection(
+                remote_server_addr="http://localhost:50259"
+            ),
+            options=options.Options(),
+        )
+        # self.driver = webdriver.Safari()
         self.driver.get(URL_PASSWORD_GAME)
         time.sleep(1)
 
