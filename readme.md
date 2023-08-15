@@ -3,9 +3,14 @@ Script on python for beating https://neal.fun/password-game/
 
 Huge thanks to [pog5](https://github.com/pog5/nealpasswordgame/tree/main), use their cheatsheets if you want to beat the game yourself.
 
-- [A simplified list of the Rules](#a-simplified-list-of-the-rules)
+- [Neal.fun's Password Game](#nealfuns-password-game)
+  - [A simplified list of the Rules](#a-simplified-list-of-the-rules)
+  - [What is a password solver?](#what-is-a-password-solver)
 
-## A simplified list of the Rules:
+## A simplified list of the Rules
+Spoiler alert! If you want to feel pure emotions while playing, don't read anything, just go and play.
+
+<details><summary>Rules</summary>
 
 1. At least 5 characters
 2. A number
@@ -44,3 +49,14 @@ Huge thanks to [pog5](https://github.com/pog5/nealpasswordgame/tree/main), use t
 35. You need the current time in format HH:MM (12 hour format)
 36. Re-type the password into another textbox, you have 2 minutes to do this. Good Luck.
 
+   </details>
+
+## What is a password solver?
+
+It is a code on python which is solving the password game. It goes throght all rules (in most cases consequentially) and resovle them in some ways. The main script is in the main.py file. 
+
+It is a TAS (tool assistant speedrun) in some way.
+
+WIP Docker enviroment for everyone to try!
+
+TODO youtube video. TODO all rules explained.
