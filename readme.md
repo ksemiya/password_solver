@@ -8,7 +8,7 @@ Huge thanks to [pog5](https://github.com/pog5/nealpasswordgame/tree/main), use t
   - [What is a password solver?](#what-is-a-password-solver)
 
 ## A simplified list of the Rules
-Spoiler alert! If you want to feel pure emotions while playing, don't read anything, just go and play.
+Spoiler alert! If you want to feel pure emotions while playing, don't read anything, [just go and play](https://neal.fun/password-game/).
 
 <details><summary>Rules</summary>
 
