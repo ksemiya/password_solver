@@ -53,10 +53,11 @@ Spoiler alert! If you want to feel pure emotions while playing, don't read anyth
 
 ## What is a password solver?
 
+[![Video](https://img.youtube.com/vi/AmV8Rot48fM/maxresdefault.jpg)](https://www.youtube.com/watch?v=AmV8Rot48fM)
+
 It is a code on python which is solving the password game. It goes throght all rules (in most cases consequentially) and resovle them in some ways. The main script is in the main.py file. 
 
 It is a TAS (tool assistant speedrun) in some way.
 
 WIP Docker enviroment for everyone to try!
-
-TODO youtube video. TODO all rules explained.
+TODO all rules explained.
