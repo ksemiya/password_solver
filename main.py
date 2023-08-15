@@ -98,6 +98,7 @@ def main():
     # rule 32, 33, 35
     password = solver_final_rules.solver(driver, password, free_digits_cnt)
     driver.update_password(utils.password_to_str(password))
+    driver.update_password(utils.password_to_str(password))
     driver.confirm_password()
     driver.set_final_answer(utils.password_to_str(password))
     driver.wait(30)
