@@ -2,24 +2,33 @@ import time
 
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from selenium.webdriver.safari import remote_connection
-from selenium.webdriver.safari import options
+from selenium.webdriver.safari import options as safari_options
 
 URL_PASSWORD_GAME = "https://neal.fun/password-game/"
 
 
 # class of driver and all that driver is doing
 class PasswordDriverWrapper:
-    def __init__(self, remote_server_addr) -> None:
+    def __init__(self, remote_server_addr: str, browser_name: str) -> None:
+        if (browser_name is None) or (browser_name.lower() == "safari"):
+            options = safari_options.Options()
+        elif browser_name.lower() == "chrome":
+            options = webdriver.ChromeOptions()
+        elif browser_name.lower() == "firefox":
+            options = webdriver.FirefoxOptions()
+        elif browser_name.lower() == "edge":
+            options = webdriver.EdgeOptions()
+        else:
+            raise ValueError(f"Incorrect browser name: {browser_name}")
+
         # /usr/bin/safaridriver -p 50259
         if remote_server_addr is None:
-            remote_server_addr = "http://localhost:50259"
-        self.driver = webdriver.Remote(
-            command_executor=remote_connection.SafariRemoteConnection(
-                remote_server_addr=remote_server_addr
-            ),
-            options=options.Options(),
-        )
+            self.driver = webdriver.Safari()
+        else:
+            self.driver = webdriver.Remote(
+                command_executor=remote_server_addr,
+                options=options,
+            )
         # self.driver = webdriver.Safari()
         self.driver.get(URL_PASSWORD_GAME)
         time.sleep(1)
