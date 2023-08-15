@@ -101,6 +101,8 @@ def main():
     driver.update_password(utils.password_to_str(password))
     driver.confirm_password()
     driver.set_final_answer(utils.password_to_str(password))
+    driver.wait(1)
+    driver.scroll_page()
     driver.wait(30)
     driver.quit()
 
